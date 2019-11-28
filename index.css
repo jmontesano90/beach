@@ -2,5 +2,12 @@ h1{
     text-align:center;
 }
 #map {
-    height: 100%;
-  }
+    margin-right: auto;
+    margin-left: auto;
+    height: 400px;  
+    width: 400px;;  
+}
+
+.weatherReport{
+    text-align:center;
+}
