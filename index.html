@@ -10,10 +10,16 @@
     <body>
         <div class="container">
             <h1>Is today a good beach day?</h1>
+            <form id="js-form">
+                <label for="search-term">Where do you want to go?</label>
+                <input type="text" name="search-term" id="js-search-term" required>
+                <input type="submit" value="Go!">
+            </form>
+
             <div id="map"></div>
             <div id="weatherInfo"></div>
         </div>
-        
+      
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD3tdqtnSKtnkY9nzGqjmUiPBbYGApjtvg&callback=initMap"
     async defer></script>
         <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>

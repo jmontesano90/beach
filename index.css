@@ -11,3 +11,8 @@ h1{
 .weatherReport{
     text-align:center;
 }
+
+#js-form{
+    text-align:center;
+    margin: 30px;
+}
