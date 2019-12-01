@@ -89,7 +89,7 @@ function initMap() {
   }
 
 function checkWeather(lat, long){
-    const params = 'waveHeight,airTemperature,precipitation,waterTemperature';
+    const params = 'waveHeight,airTemperature,precipitation,waterTemperature,humidity,windSpeed,cloudCover';
       
     fetch(`https://api.stormglass.io/v1/weather/point?lat=${lat}&lng=${long}&params=${params}`, {
         headers: {
@@ -107,23 +107,79 @@ function checkWeather(lat, long){
 function displayWeather(responseJson){
     console.log(responseJson);
     $('#weatherInfo').empty();
-
+    $('.weatherReport').empty();
+    styleResults(responseJson.hours[0].airTemperature[0].value,responseJson.hours[0].waterTemperature[0].value,responseJson.hours[0].precipitation[0].value,responseJson.hours[0].cloudCover[0].value);
     $('#weatherInfo').append(`
+      <h3>Local Weather Conditions</h3>
         <ul class="weatherReport"> 
-            <li>Water Temperature:${responseJson.hours[0].waterTemperature[0].value}</li>
-            <li>Precipitation:${responseJson.hours[0].precipitation[0].value}</li>
-            <li>Temperature:${responseJson.hours[0].airTemperature[0].value}</li>
-            <li>Wave Height:${responseJson.hours[0].waveHeight[0].value}</li>
+            <li class="waterTemperature">Water Temperature: ${responseJson.hours[0].waterTemperature[0].value} °c</li>
+            <li>Precipitation: ${responseJson.hours[0].precipitation[0].value} kg/m²</li>
+            <li class="temperature">Temperature: ${responseJson.hours[0].airTemperature[0].value} °c</li>
+            <li>Wave Height: ${responseJson.hours[0].waveHeight[0].value} m</li>
+            <li>Humidity: ${responseJson.hours[0].humidity[0].value} %</li>
+            <li>Wind Speed: ${responseJson.hours[0].windSpeed[0].value} m/s</li>
+            <li class="cloudCover">Cloud Cover: ${responseJson.hours[0].cloudCover[0].value} %</li>
         </ul>`
     );
 }
 
 
-$(getCoords("Gardiner County Park"));
+// $(getCoords("Gardiner County Park"));
 // $(checkWeather);
-$(initMap);
+// $(initMap);
+
+function styleResults(temperature,waterTemperature,precipitation,cloudCover){
+    console.log(temperature,waterTemperature,precipitation,cloudCover);
 
 
+    let cloudPercentage = cloudCover/100;
+    console.log(cloudPercentage);
+    let cloudStyle = document.createElement('style');
+    cloudStyle.innerHTML = `
+    .cloudCover {
+      background-color: rgba(128, 128, 128,${cloudPercentage});
+    }
+    `;
+    document.head.appendChild(cloudStyle);
+    //style the cloud cover li with the transparency matching the percentage of cloud cover
+
+    let temp="temperature";
+    let watertemp="waterTemperature";
+
+    tempColor(temperature,temp);
+    tempColor(waterTemperature,watertemp);
+
+
+
+  }
+
+  function tempColor(temperature,tempType){
+    let transparencyValue;
+    
+    if (temperature > 0){
+        transparencyValue = temperature/100;
+        let tempStyle = document.createElement('style');
+        tempStyle.innerHTML = `
+          .${tempType} {
+          background-color: rgba(255, 85, 85,${transparencyValue});
+          }
+          `;
+    document.head.appendChild(tempStyle);
+    }
+    else {
+       Math.abs(temperature);
+       transparencyValue = temperature/100;
+       let tempStyle = document.createElement('style');
+       tempStyle.innerHTML = `
+         .${tempType} {
+         background-color: rgba(164, 190, 224,${transparencyValue});
+         }
+         `;
+   document.head.appendChild(tempStyle);
+
+    }
+
+  }
 
 function watchForm() {
     $('form').submit(event => {
