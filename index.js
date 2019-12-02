@@ -108,16 +108,16 @@ function displayWeather(responseJson){
     console.log(responseJson);
     $('#weatherInfo').empty();
     $('.weatherReport').empty();
-    styleResults(responseJson.hours[0].airTemperature[0].value,responseJson.hours[0].waterTemperature[0].value,responseJson.hours[0].precipitation[0].value,responseJson.hours[0].cloudCover[0].value);
+    styleResults(responseJson.hours[0].airTemperature[0].value,responseJson.hours[0].waterTemperature[0].value,responseJson.hours[0].precipitation[0].value,responseJson.hours[0].cloudCover[0].value,responseJson.hours[0].humidity[0].value,responseJson.hours[0].windSpeed[0].value,responseJson.hours[0].waveHeight[0].value);
     $('#weatherInfo').append(`
       <h3>Local Weather Conditions</h3>
         <ul class="weatherReport"> 
             <li class="waterTemperature">Water Temperature: ${responseJson.hours[0].waterTemperature[0].value} °c</li>
-            <li>Precipitation: ${responseJson.hours[0].precipitation[0].value} kg/m²</li>
+            <li class="precipitation">Precipitation: ${responseJson.hours[0].precipitation[0].value} kg/m²</li>
             <li class="temperature">Temperature: ${responseJson.hours[0].airTemperature[0].value} °c</li>
-            <li>Wave Height: ${responseJson.hours[0].waveHeight[0].value} m</li>
-            <li>Humidity: ${responseJson.hours[0].humidity[0].value} %</li>
-            <li>Wind Speed: ${responseJson.hours[0].windSpeed[0].value} m/s</li>
+            <li class="waveHeight">Wave Height: ${responseJson.hours[0].waveHeight[0].value} m</li>
+            <li class="humidity">Humidity: ${responseJson.hours[0].humidity[0].value} %</li>
+            <li class="windSpeed">Wind Speed: ${responseJson.hours[0].windSpeed[0].value} m/s</li>
             <li class="cloudCover">Cloud Cover: ${responseJson.hours[0].cloudCover[0].value} %</li>
         </ul>`
     );
@@ -128,29 +128,68 @@ function displayWeather(responseJson){
 // $(checkWeather);
 // $(initMap);
 
-function styleResults(temperature,waterTemperature,precipitation,cloudCover){
-    console.log(temperature,waterTemperature,precipitation,cloudCover);
+function styleResults(temperature,waterTemperature,precipitation,cloudCover,humidity,windSpeed,waveHeight){
+    console.log(temperature,waterTemperature,precipitation,cloudCover,humidity);
 
+    let params = [
+      {
+        class: ".precipitation",
+        color1: 10,
+        color2: 198,
+        color3: 255,
+        transparency: precipitation/100
+      },
 
-    let cloudPercentage = cloudCover/100;
-    console.log(cloudPercentage);
-    let cloudStyle = document.createElement('style');
-    cloudStyle.innerHTML = `
-    .cloudCover {
-      background-color: rgba(128, 128, 128,${cloudPercentage});
+      {
+        class: ".humidity",
+        color1: 75,
+        color2: 213,
+        color3: 255,
+        transparency: humidity/100
+      },
+
+      {
+        class: ".waveHeight",
+        color1: 66,
+        color2: 45,
+        color3: 255,
+        transparency: waveHeight/20
+      },
+      
+      {
+        class: ".cloudCover",
+        color1: 128,
+        color2: 128,
+        color3: 128,
+        transparency: cloudCover/100
+      },
+
+      {
+        class: ".windSpeed",
+        color1: 159,
+        color2: 187,
+        color3: 196,
+        transparency: windSpeed/100
+      },
+
+    ];
+    
+    for (i = 0; i < params.length; i++){
+    let style = document.createElement('style');
+      style.innerHTML = `
+        ${params[i].class} {
+         background-color: rgba(${params[i].color1},${params[i].color2}, ${params[i].color3},${params[i].transparency});
+       }
+     `;
+     console.log(params[i].class);
+    document.head.appendChild(style);
     }
-    `;
-    document.head.appendChild(cloudStyle);
-    //style the cloud cover li with the transparency matching the percentage of cloud cover
 
     let temp="temperature";
     let watertemp="waterTemperature";
 
     tempColor(temperature,temp);
     tempColor(waterTemperature,watertemp);
-
-
-
   }
 
   function tempColor(temperature,tempType){
