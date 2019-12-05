@@ -1,36 +1,5 @@
-
-let gEarthKey = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyD3tdqtnSKtnkY9nzGqjmUiPBbYGApjtvg&callback=initMap';
-let placesApi = 'AIzaSyD3tdqtnSKtnkY9nzGqjmUiPBbYGApjtvg';
-let placesUrl = 'https://maps.googleapis.com/maps/api/place/findplacefromtext/json';
 let geocodeUrl = 'https://maps.googleapis.com/maps/api/geocode/json';
 let geocodeApi = 'AIzaSyC3qDf_W5XE1_rxLvD6_JRZMZLQUxA_WxA';
-
-// function getCoords(location){
-//     //this getCoords run off of google places
-//     const params = {
-//         input: location,
-//         inputtype: 'textquery',
-//         fields: 'geometry',
-//         key: placesApi,
-//     };
-
-//     const queryString = formatQueryParams(params);
-//     const url = placesUrl + '?' + queryString;
-//     console.log(url);
-
-//     fetch(url)
-//     .then(response => {
-//       if (response.ok) {
-//         return response.json();
-//       }
-//       throw new Error(response.statusText);
-//     })
-//     // .then(responseJson => refreshMap(responseJson))
-//     .catch(err => {
-//       $('#js-error-message').text(`Something went wrong: ${err.message}`);
-//     });
-
-// }
 
 function getCoords(location){
 
@@ -108,116 +77,83 @@ function displayWeather(responseJson){
     console.log(responseJson);
     $('#weatherInfo').empty();
     $('.weatherReport').empty();
-    styleResults(responseJson.hours[0].airTemperature[0].value,responseJson.hours[0].waterTemperature[0].value,responseJson.hours[0].precipitation[0].value,responseJson.hours[0].cloudCover[0].value,responseJson.hours[0].humidity[0].value,responseJson.hours[0].windSpeed[0].value,responseJson.hours[0].waveHeight[0].value);
+    let d = new Date();
+    let hour = d.getHours();
+    let h = Number(hour);
+
+    let airTempColor = tempColor(responseJson.hours[h].airTemperature[0].value);
+    let waterTempColor = tempColor(responseJson.hours[h].waterTemperature[0].value);
+
+    console.log(h);
     $('#weatherInfo').append(`
       <h3>Local Weather Conditions</h3>
         <ul class="weatherReport"> 
-            <li class="waterTemperature">Water Temperature: ${responseJson.hours[0].waterTemperature[0].value} °c</li>
-            <li class="precipitation">Precipitation: ${responseJson.hours[0].precipitation[0].value} kg/m²</li>
-            <li class="temperature">Temperature: ${responseJson.hours[0].airTemperature[0].value} °c</li>
-            <li class="waveHeight">Wave Height: ${responseJson.hours[0].waveHeight[0].value} m</li>
-            <li class="humidity">Humidity: ${responseJson.hours[0].humidity[0].value} %</li>
-            <li class="windSpeed">Wind Speed: ${responseJson.hours[0].windSpeed[0].value} m/s</li>
-            <li class="cloudCover">Cloud Cover: ${responseJson.hours[0].cloudCover[0].value} %</li>
+            <li class="waterTemperature" style="background-color: rgb(${airTempColor[0]},${airTempColor[1]},${airTempColor[2]},${airTempColor[3]});">Water Temperature: ${responseJson.hours[h].waterTemperature[0].value} °c</li>
+            <li class="precipitation" style="background-color: rgb(10,198,255, ${precipitationTransparency(responseJson.hours[h].precipitation[0].value)});">Precipitation: ${responseJson.hours[h].precipitation[0].value} kg/m²</li>
+            <li class="temperature" style="background-color: rgb(${waterTempColor[0]},${waterTempColor[1]},${waterTempColor[2]},${waterTempColor[3]});">Temperature: ${responseJson.hours[h].airTemperature[0].value} °c</li>
+            <li class="waveHeight" style="background-color: rgb(66,45,255,${waveHeightTransparency(responseJson.hours[h].waveHeight[0].value)});">Wave Height: ${responseJson.hours[h].waveHeight[0].value} m</li>
+            <li class="humidity" style="background-color: rgb(75,213,255, ${percentTransparency(responseJson.hours[h].humidity[0].value)});">Humidity: ${responseJson.hours[h].humidity[0].value} %</li>
+            <li class="windSpeed" style="background-color: rgb(159,187,196,${windSpeedTransparency(responseJson.hours[h].windSpeed[0].value)});">Wind Speed: ${responseJson.hours[h].windSpeed[0].value} m/s</li>
+            <li class="cloudCover" style="background-color: rgb(128,128,128, ${percentTransparency(responseJson.hours[h].cloudCover[0].value)});">Cloud Cover: ${responseJson.hours[h].cloudCover[0].value} %</li>
         </ul>`
     );
 }
 
 
-// $(getCoords("Gardiner County Park"));
-// $(checkWeather);
-// $(initMap);
 
-function styleResults(temperature,waterTemperature,precipitation,cloudCover,humidity,windSpeed,waveHeight){
-    console.log(temperature,waterTemperature,precipitation,cloudCover,humidity);
-
-    let params = [
-      {
-        class: ".precipitation",
-        color1: 10,
-        color2: 198,
-        color3: 255,
-        transparency: precipitation/100
-      },
-
-      {
-        class: ".humidity",
-        color1: 75,
-        color2: 213,
-        color3: 255,
-        transparency: humidity/100
-      },
-
-      {
-        class: ".waveHeight",
-        color1: 66,
-        color2: 45,
-        color3: 255,
-        transparency: waveHeight/20
-      },
-      
-      {
-        class: ".cloudCover",
-        color1: 128,
-        color2: 128,
-        color3: 128,
-        transparency: cloudCover/100
-      },
-
-      {
-        class: ".windSpeed",
-        color1: 159,
-        color2: 187,
-        color3: 196,
-        transparency: windSpeed/100
-      },
-
-    ];
-    
-    for (i = 0; i < params.length; i++){
-    let style = document.createElement('style');
-      style.innerHTML = `
-        ${params[i].class} {
-         background-color: rgba(${params[i].color1},${params[i].color2}, ${params[i].color3},${params[i].transparency});
-       }
-     `;
-     console.log(params[i].class);
-    document.head.appendChild(style);
+  function precipitationTransparency(precip){
+    let transparency = 1;
+      if (precip >100){
+        return transparency;
     }
-
-    let temp="temperature";
-    let watertemp="waterTemperature";
-
-    tempColor(temperature,temp);
-    tempColor(waterTemperature,watertemp);
+      else{
+        return precip/100;
+    }
   }
 
-  function tempColor(temperature,tempType){
+  function windSpeedTransparency(speed){
+    let transparency = 1;
+      if (speed >100){
+    return transparency;
+  }
+      else{
+    return speed/100;
+  }
+}
+
+
+  function waveHeightTransparency(waveHeight){
+    let transparency = 1;
+      if (waveHeight > 20){
+        return transparency;
+    }
+      else{
+        return waveHeight/20;
+  }
+}
+
+  function percentTransparency(thing){
+    return thing/100;
+  }
+
+
+  function tempColor(temp){
     let transparencyValue;
+    let tempHot = [255,85,85];
+    let tempCold = [164,190,224];
     
-    if (temperature > 0){
-        transparencyValue = temperature/100;
-        let tempStyle = document.createElement('style');
-        tempStyle.innerHTML = `
-          .${tempType} {
-          background-color: rgba(255, 85, 85,${transparencyValue});
-          }
-          `;
-    document.head.appendChild(tempStyle);
+    if (temp > 0){
+        transparencyValue = temp/100;
+        tempHot.push(transparencyValue);
+        return tempHot;
     }
-    else {
-       Math.abs(temperature);
-       transparencyValue = temperature/100;
-       let tempStyle = document.createElement('style');
-       tempStyle.innerHTML = `
-         .${tempType} {
-         background-color: rgba(164, 190, 224,${transparencyValue});
-         }
-         `;
-   document.head.appendChild(tempStyle);
-
+    
+    else{
+      Math.abs(temp);
+      transparencyValue = temp/100;
+      tempCold.push(transparencyValue);
+      return tempCold;
     }
-
   }
 
 function watchForm() {
