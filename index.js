@@ -21,7 +21,7 @@ function getCoords(location){
     })
     .then(responseJson => refreshPage(responseJson))
     .catch(err => {
-      $('#js-error-message').text(`Something went wrong: ${err.message}`);
+      $('#weatherInfo').text(`Something went wrong: ${err.message}`);
     });
 
 
@@ -69,7 +69,11 @@ function checkWeather(lat, long){
             response.json()).then((jsonData) => {
              console.log("weather api worked");
              displayWeather(jsonData);
-        });
+        })
+        
+        .catch(err => {
+          $('#weatherInfo').text(`Oh no we couldn't find that data!  Are you sure you picked somewhere near a beach?`);
+        });;
 }
 
 
@@ -123,6 +127,7 @@ function displayWeather(responseJson){
 
 
   function waveHeightTransparency(waveHeight){
+    console.log(waveHeight);
     let transparency = 1;
       if (waveHeight > 20){
         return transparency;
