@@ -29,10 +29,12 @@ h1{
 }
 
 #engageButton{
-    border-radius: 50%;
+    /* border-radius: 90%; */
     padding: 4px;
     margin-top: 5px;
-    font-size: 28px;
+    font-size: 40px;
+    width: 200px;
+    border-radius: 10%;
     background-color: rgb(35, 190, 35);
     transition-duration: 0.4s;
     cursor: pointer;
@@ -71,22 +73,28 @@ h1{
     text-align:center;
     padding: 5px;
     margin: 30px;
-    background-color: rgba(141, 88, 60, 0.651);
-    width:200px;
+    /* background-color: rgba(141, 88, 60, 0.651); */
+    width:550px;
     height:180px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 5px;
 }
 
 #js-search-term{
     border: black 2px solid;
     border-radius: 4px;
     padding: 5px;
-    height: 34px;
-    width: 180px;
+    height: 45px;
+    width: 550px;
     margin: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 30px;
 }
 
 .inputLabel{
-    font-size: 24px;
+    font-size: 40px;
     margin-top:10px;
     margin-bottom: 10px;
 }
@@ -122,15 +130,6 @@ h3{
     -moz-animation: fadein 1s;
     -webkit-animation: fadein 1s;
     -o-animation: fadein 1s;
-}
-
-#js-form{
-    border:black 1px solid;
-    border-radius: 10px;
-    width:250px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 5px;
 }
 
 @keyframes fadein {
