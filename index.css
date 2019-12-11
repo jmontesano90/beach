@@ -9,21 +9,50 @@ body{
     flex-direction: column;
     padding:0;
     box-sizing: border-box;
-    width: 400px;
+    /* width: 400px; */
     margin-left: auto;
     margin-right: auto;
 }
 
 h1{
     text-align:center;
+    font-size: 40px;
 }
+
+.js-instructions{
+    text-align: center;
+    font-size: 18px;
+    padding: 5px;
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+    margin: 0px;
+}
+
+#engageButton{
+    border-radius: 50%;
+    padding: 4px;
+    margin-top: 5px;
+    font-size: 28px;
+    background-color: rgb(35, 190, 35);
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+
+#engageButton:hover{
+    background-color: rgb(9, 129, 9);
+}
+
 #map {
     margin-right: auto;
     margin-left: auto;
     height: 350px;  
-    width: 350px;
+    width: 80%;
     border: black 1px solid;  
     border-radius: 10px;
+    animation: fadein 1s;
+    -moz-animation: fadein 1s;
+    -webkit-animation: fadein 1s;
+    -o-animation: fadein 1s;
 }
 
 .weatherReport{
@@ -35,20 +64,37 @@ h1{
     -moz-animation: fadein 1s;
     -webkit-animation: fadein 1s;
     -o-animation: fadein 1s;
+    background-color: rgba(151, 151, 151, 0.13);
 }
 
 #js-form{
     text-align:center;
+    padding: 5px;
     margin: 30px;
+    background-color: rgba(141, 88, 60, 0.651);
+    width:200px;
+    height:180px;
+}
+
+#js-search-term{
+    border: black 2px solid;
+    border-radius: 4px;
+    padding: 5px;
+    height: 34px;
+    width: 180px;
+    margin: 10px;
 }
 
 .inputLabel{
-    font-size: 20px;
+    font-size: 24px;
+    margin-top:10px;
+    margin-bottom: 10px;
 }
 
 ul{
     padding:0px;
-    width:350px;
+    width:80%;
+    height: 350px;
     margin-left: auto;
     margin-right: auto;
 }
@@ -56,20 +102,22 @@ ul{
 li{
     border: black 1px solid;
     border-radius: 5px;
-    width: 330px;
+    width: 75%;
     margin-left: auto;
     margin-right: auto;
-    margin-top:5px;
-    margin-bottom:5px;
-    font-size:20px;
+    margin-top:7px;
+    margin-bottom:7px;
+    font-size:29px;
 }
 h3{
     text-align:center;
     margin-left:auto;
     margin-right:auto;
-    margin-top: 30px;
+    margin-top: 10px;
     margin-bottom: 10px;
     font-size: 28px;
+    border-right: 1px black solid;
+    border-left: 1px black solid;
     animation: fadein 1s;
     -moz-animation: fadein 1s;
     -webkit-animation: fadein 1s;
@@ -119,4 +167,54 @@ h3{
     to {
         opacity: 1;
     }
+}
+
+@media screen and (min-width: 1080px){
+    .js-instructions{
+        position: fixed;
+        top: 100px;
+        left: 100px;
+        width: 300px;
+        font-size: 22px;
+        border-right: 0px;
+        border-left: 0px;
+    }
+
+    .userReturn{
+        display:flex;
+        justify-content: space-evenly;
+        flex-direction: row;
+    }
+    #map{
+        width: 350px;
+    }
+
+    .weatherReport{
+        width: 350px;
+        height: 284px;
+    }
+
+    .container{
+        width: 750px;
+    }
+
+    ul{
+        padding:0px;
+        width:350px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    li{
+        border: black 1px solid;
+        border-radius: 5px;
+        width: 330px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top:5px;
+        margin-bottom:5px;
+        font-size:24px;
+    }
+
+
 }

@@ -81,6 +81,8 @@ function displayWeather(responseJson){
     console.log(responseJson);
     $('#weatherInfo').empty();
     $('.weatherReport').empty();
+    $('.js-instructions').empty();
+    $('p').removeClass('js-instructions');
     let d = new Date();
     let hour = d.getHours();
     let h = Number(hour);
@@ -91,17 +93,20 @@ function displayWeather(responseJson){
     console.log(h);
     $('#weatherInfo').append(`
       <h3>Local Weather Conditions</h3>
-        <ul class="weatherReport"> 
-            <li class="waterTemperature" style="background-color: rgb(${airTempColor[0]},${airTempColor[1]},${airTempColor[2]},${airTempColor[3]});">Water Temperature: ${responseJson.hours[h].waterTemperature[0].value} °c</li>
+        <ul class="weatherReport" id="weatherUl"> 
+            <li class="waterTemperature" style="background-color: rgb(${waterTempColor[0]},${waterTempColor[1]},${waterTempColor[2]},${waterTempColor[3]});">Water Temperature: ${responseJson.hours[h].waterTemperature[0].value} °c</li>
             <li class="precipitation" style="background-color: rgb(10,198,255, ${precipitationTransparency(responseJson.hours[h].precipitation[0].value)});">Precipitation: ${responseJson.hours[h].precipitation[0].value} kg/m²</li>
-            <li class="temperature" style="background-color: rgb(${waterTempColor[0]},${waterTempColor[1]},${waterTempColor[2]},${waterTempColor[3]});">Temperature: ${responseJson.hours[h].airTemperature[0].value} °c</li>
+            <li class="temperature" style="background-color: rgb(${airTempColor[0]},${airTempColor[1]},${airTempColor[2]},${airTempColor[3]});">Temperature: ${responseJson.hours[h].airTemperature[0].value} °c</li>
             <li class="waveHeight" style="background-color: rgb(66,45,255,${waveHeightTransparency(responseJson.hours[h].waveHeight[0].value)});">Wave Height: ${responseJson.hours[h].waveHeight[0].value} m</li>
             <li class="humidity" style="background-color: rgb(75,213,255, ${percentTransparency(responseJson.hours[h].humidity[0].value)});">Humidity: ${responseJson.hours[h].humidity[0].value} %</li>
             <li class="windSpeed" style="background-color: rgb(159,187,196,${windSpeedTransparency(responseJson.hours[h].windSpeed[0].value)});">Wind Speed: ${responseJson.hours[h].windSpeed[0].value} m/s</li>
             <li class="cloudCover" style="background-color: rgb(128,128,128, ${percentTransparency(responseJson.hours[h].cloudCover[0].value)});">Cloud Cover: ${responseJson.hours[h].cloudCover[0].value} %</li>
         </ul>`
     );
-}
+  let elmnt = document.getElementById("weatherUl");
+  elmnt.scrollIntoView();
+
+  }
 
 
 
@@ -143,11 +148,13 @@ function displayWeather(responseJson){
 
 
   function tempColor(temp){
+    console.log("temperature is " + temp);
     let transparencyValue;
     let tempHot = [255,85,85];
     let tempCold = [164,190,224];
     
     if (temp > 0){
+        Math.abs(temp);
         transparencyValue = temp/100;
         tempHot.push(transparencyValue);
         return tempHot;
