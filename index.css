@@ -9,7 +9,6 @@ body{
     flex-direction: column;
     padding:0;
     box-sizing: border-box;
-    /* width: 400px; */
     margin-left: auto;
     margin-right: auto;
 }
@@ -29,7 +28,6 @@ h1{
 }
 
 #engageButton{
-    /* border-radius: 90%; */
     padding: 4px;
     margin-top: 5px;
     font-size: 40px;
@@ -73,7 +71,6 @@ h1{
     text-align:center;
     padding: 5px;
     margin: 30px;
-    /* background-color: rgba(141, 88, 60, 0.651); */
     width:550px;
     height:180px;
     margin-left: auto;
@@ -111,6 +108,7 @@ li{
     border: black 1px solid;
     border-radius: 5px;
     width: 75%;
+    height:11.5%;
     margin-left: auto;
     margin-right: auto;
     margin-top:7px;
@@ -168,16 +166,8 @@ h3{
     }
 }
 
+
 @media screen and (min-width: 1080px){
-    .js-instructions{
-        position: fixed;
-        top: 100px;
-        left: 100px;
-        width: 300px;
-        font-size: 22px;
-        border-right: 0px;
-        border-left: 0px;
-    }
 
     .userReturn{
         display:flex;

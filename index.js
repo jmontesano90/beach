@@ -2,6 +2,7 @@ let geocodeUrl = 'https://maps.googleapis.com/maps/api/geocode/json';
 let geocodeApi = 'AIzaSyC3qDf_W5XE1_rxLvD6_JRZMZLQUxA_WxA';
 
 function getCoords(location){
+      //gets coordinates for google maps and storm glass api
 
       const params = {
         address: location,
@@ -10,7 +11,6 @@ function getCoords(location){
 
      const queryString = formatQueryParams(params);
      const url = geocodeUrl + '?' + queryString;
-    console.log(url);
 
     fetch(url)
     .then(response => {
@@ -35,29 +35,28 @@ function formatQueryParams(params) {
 
 let map;
 function initMap() {
-        console.log("google api worked");
+        //default map location when site loads
         map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: -34.397, lng: 150.644},
         zoom: 8
     });
   }
 
-  function refreshPage(responseJson){
-        $('#map').empty();
-        console.log("refresh map ran");
-        lat = responseJson.results[0].geometry.location.lat;
-        long = responseJson.results[0].geometry.location.lng;
-        console.log(lat);
-        console.log(long);
-        map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat: lat, lng: long},
-            zoom: 14
-        });
+function refreshPage(responseJson){
+  //updates map to user input
+    $('#map').empty();
+    lat = responseJson.results[0].geometry.location.lat;
+    long = responseJson.results[0].geometry.location.lng;
+    map = new google.maps.Map(document.getElementById('map'), {
+      center: {lat: lat, lng: long},
+      zoom: 14
+    });
 
-        $(checkWeather(lat, long));    
+    $(checkWeather(lat, long));    
   }
 
 function checkWeather(lat, long){
+  //checks user input's location for weather parameters
     const params = 'waveHeight,airTemperature,precipitation,waterTemperature,humidity,windSpeed,cloudCover';
       
     fetch(`https://api.stormglass.io/v1/weather/point?lat=${lat}&lng=${long}&params=${params}`, {
@@ -67,7 +66,6 @@ function checkWeather(lat, long){
     })
         .then((response) => 
             response.json()).then((jsonData) => {
-             console.log("weather api worked");
              displayWeather(jsonData);
         })
         
@@ -78,11 +76,9 @@ function checkWeather(lat, long){
 
 
 function displayWeather(responseJson){
-    console.log(responseJson);
+
     $('#weatherInfo').empty();
     $('.weatherReport').empty();
-    $('.js-instructions').empty();
-    $('p').removeClass('js-instructions');
     let d = new Date();
     let hour = d.getHours();
     let h = Number(hour);
@@ -90,13 +86,12 @@ function displayWeather(responseJson){
     let airTempColor = tempColor(responseJson.hours[h].airTemperature[0].value);
     let waterTempColor = tempColor(responseJson.hours[h].waterTemperature[0].value);
 
-    console.log(h);
     $('#weatherInfo').append(`
       <h3>Local Weather Conditions</h3>
         <ul class="weatherReport" id="weatherUl"> 
             <li class="waterTemperature" style="background-color: rgb(${waterTempColor[0]},${waterTempColor[1]},${waterTempColor[2]},${waterTempColor[3]});">Water Temperature: ${responseJson.hours[h].waterTemperature[0].value} °c</li>
             <li class="precipitation" style="background-color: rgb(10,198,255, ${precipitationTransparency(responseJson.hours[h].precipitation[0].value)});">Precipitation: ${responseJson.hours[h].precipitation[0].value} kg/m²</li>
-            <li class="temperature" style="background-color: rgb(${airTempColor[0]},${airTempColor[1]},${airTempColor[2]},${airTempColor[3]});">Temperature: ${responseJson.hours[h].airTemperature[0].value} °c</li>
+            <li class="temperature" style="background-color: rgb(${airTempColor[0]},${airTempColor[1]},${airTempColor[2]},${airTempColor[3]});">Air Temperature: ${responseJson.hours[h].airTemperature[0].value} °c</li>
             <li class="waveHeight" style="background-color: rgb(66,45,255,${waveHeightTransparency(responseJson.hours[h].waveHeight[0].value)});">Wave Height: ${responseJson.hours[h].waveHeight[0].value} m</li>
             <li class="humidity" style="background-color: rgb(75,213,255, ${percentTransparency(responseJson.hours[h].humidity[0].value)});">Humidity: ${responseJson.hours[h].humidity[0].value} %</li>
             <li class="windSpeed" style="background-color: rgb(159,187,196,${windSpeedTransparency(responseJson.hours[h].windSpeed[0].value)});">Wind Speed: ${responseJson.hours[h].windSpeed[0].value} m/s</li>
@@ -110,29 +105,33 @@ function displayWeather(responseJson){
 
 
 
+  //The site will change the transparency of each result relative to what the result is.  
+  //For example if cloud cover is 81%, the transparency of its background color becomes 81%
+  //Their are various functions because the conditions are different for each variable, precipitation does not have such a clearly defined 100% such as cloud cover and humidity
+
+
   function precipitationTransparency(precip){
     let transparency = 1;
-      if (precip >100){
+      if (precip >15){
         return transparency;
     }
       else{
-        return precip/100;
+        return precip/15;
     }
   }
 
   function windSpeedTransparency(speed){
     let transparency = 1;
-      if (speed >100){
+      if (speed > 30){
     return transparency;
   }
       else{
-    return speed/100;
+    return speed/30;
   }
 }
 
 
   function waveHeightTransparency(waveHeight){
-    console.log(waveHeight);
     let transparency = 1;
       if (waveHeight > 20){
         return transparency;
@@ -148,7 +147,8 @@ function displayWeather(responseJson){
 
 
   function tempColor(temp){
-    console.log("temperature is " + temp);
+    //checks if the temperature is above or below zero degress celsius.  
+    //If its above zero degree celsius it changes the color to a light blue, if above a dark red
     let transparencyValue;
     let tempHot = [255,85,85];
     let tempCold = [164,190,224];
