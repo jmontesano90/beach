@@ -10,22 +10,23 @@
     </head>
 
     <body>
-        <div class="container">
-            <h1>Is today a good beach day?</h1>
-            <p class="js-instructions">Get local, to the hour weather reports of seaside locations! <br> Simply type in the location you wish to go to and see if its a good beach day!</p>
-            <form id="js-form">
-                <label for="js-search-term" class="inputLabel">Where do you want to go?<br></label>
-                <input type="text" name="search-term" id="js-search-term" required placeholder="Miami Beach"><br>
-                <input type="submit" id="engageButton" value="Go!">
-            </form>
-        
+        <main class="container">
+            <section>
+                <h1>Is today a good beach day?</h1>
+                <p class="js-instructions">Get local, to the hour weather reports of seaside locations! <br> Simply type in the location you wish to go to and see if its a good beach day!</p>
+                <form id="js-form">
+                    <label for="js-search-term" class="inputLabel">Where do you want to go?<br></label>
+                    <input type="text" name="search-term" id="js-search-term" required placeholder="Miami Beach"><br>
+                    <input type="submit" id="engageButton" value="Go!">
+                </form>
+            </section>
             
             <div class="userReturn">
                 <div id="map"></div>
                 <div id="weatherInfo"></div>
             </div>
             
-        </div>
+        </main>
         
         <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
         <script src="index.js"></script>

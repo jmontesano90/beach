@@ -1,6 +1,6 @@
 let geocodeUrl = 'https://maps.googleapis.com/maps/api/geocode/json';
 let geocodeApi = 'AIzaSyC3qDf_W5XE1_rxLvD6_JRZMZLQUxA_WxA';
-
+let stormGlassUrl = "https://api.stormglass.io/v1/weather/";
 function getCoords(location){
       //gets coordinates for google maps and storm glass api
 
@@ -21,7 +21,7 @@ function getCoords(location){
     })
     .then(responseJson => refreshPage(responseJson))
     .catch(err => {
-      $('#weatherInfo').text(`Something went wrong: ${err.message}`);
+      $('#weatherInfo').text(`No results could be found. Try searching again`);
     });
 
 
@@ -59,7 +59,7 @@ function checkWeather(lat, long){
   //checks user input's location for weather parameters
     const params = 'waveHeight,airTemperature,precipitation,waterTemperature,humidity,windSpeed,cloudCover';
       
-    fetch(`https://api.stormglass.io/v1/weather/point?lat=${lat}&lng=${long}&params=${params}`, {
+    fetch(stormGlassUrl + `point?lat=${lat}&lng=${long}&params=${params}`, {
         headers: {
             'Authorization': '23da59d0-1153-11ea-afc0-0242ac130002-23da5ad4-1153-11ea-afc0-0242ac130002'
       }
@@ -70,7 +70,7 @@ function checkWeather(lat, long){
         })
         
         .catch(err => {
-          $('#weatherInfo').text(`Oh no we couldn't find that data!  Are you sure you picked somewhere near a beach?`);
+          $('#weatherInfo').text(`Oh no we couldn't find that data!  Please try a different location and try again`);
         });;
 }
 
